@@ -1,0 +1,98 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+void complete_time(int process[],int n,int burst_time[],int arrival[],int CT[])
+{
+CT[1]=burst_time[1];
+for(int i=2;i<=n;i++)
+{
+CT[i]=burst_time[i]+CT[i-1];
+}
+}
+void turn_around(int process[],int n,int burst_time[],int arrival[],int CT[],int TAT[])
+{
+for(int i=1;i<=n;i++)
+{
+	TAT[i]=CT[i]-arrival[i];
+}
+}
+void waiting_time(int process[],int n,int burst_time[],int arrival[],int TAT[],int WT[])
+{	
+	for(int i=1;i<=n;i++)
+	{
+		WT[i]=TAT[i]-burst_time[i];
+	}
+}
+void average_WT(int WT[],int n)
+{
+	float s=0;
+	for(int i=1;i<=n;i++)
+	{
+		s=s+WT[i];
+	}
+	s=s/float(n);
+	printf("Average Waiting Time is %f\n",s);
+}
+void average_TAT(int TAT[],int n)
+{
+	float t=0;
+	for(int i=1;i<=n;i++)
+	{
+		t=t+TAT[i];
+	}
+	t=t/float(n);
+	printf("The Average Turnaround Time is %f\n",t);
+}
+void findall(int process[],int n,int burst_time[],int arrival[])
+{
+int CT[n];
+int TAT[n];
+int WT[n];
+complete_time(process,n,burst_time,arrival,CT);
+turn_around(process,n,burst_time,arrival,CT,TAT);
+waiting_time(process,n,burst_time,arrival,TAT,WT);
+average_WT(WT,n);
+average_TAT(TAT,n);
+int avg_wt=0;
+int avg_tat=0;
+printf("Process    Arrival Time    Burst Time    Completion Time    Turn Around Time    Waiting Time\n");
+for(int i=1;i<=n;i++)
+{
+printf("  %d",process[i]);
+printf("		%d",arrival[i]);
+printf("	       %d",burst_time[i]);
+printf("             %d",CT[i]);
+printf("                 %d",TAT[i]);
+printf("                   %d",WT[i]);
+printf("\n");
+}
+}
+int main()
+{
+int n;
+printf("Enter the number of processes\n");
+scanf("%d",&n);
+int process[n];
+for(int i=1;i<=n;i++)
+{
+	process[i]=i;
+}
+for(int i=1;i<=n;i++)
+{
+	printf("%d\n",process[i]);
+}
+int burst_time[n];
+printf("Enter the Burst time\n");
+for(int i=1;i<=n;i++)
+{
+	scanf("%d",&burst_time[i]);
+}
+int arrival[n];
+printf("Enter the arrival time\n");
+for(int i=1;i<=n;i++)
+{
+scanf("%d",&arrival[i]);	
+}
+findall(process,n,burst_time,arrival);
+return 0;
+}
